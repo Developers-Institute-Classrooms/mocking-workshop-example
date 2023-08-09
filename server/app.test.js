@@ -1,10 +1,14 @@
 const request = require("supertest");
 const app = require("./app");
 const pool = require("./db");
+const { getAllTodos } = require("./repository");
+
+jest.mock("./repository");
 
 describe("Todos API", () => {
   afterEach(async () => {
     await pool.query("DELETE from todo");
+    jest.restoreAllMocks();
   });
 
   afterAll(() => {
@@ -12,18 +16,22 @@ describe("Todos API", () => {
   });
 
   test("GET /todos: WHEN there are todos in the database THEN return status 200 and an array of todos", async () => {
-    await pool.query(`
+    /* await pool.query(`
       INSERT INTO
         todo (todo_id, description)
       VALUES
         (1, 'Start working on my project')  
-    `);
+    `);*/
+
     const expectedResponseBody = [
       {
         todo_id: 1,
         description: "Start working on my project",
       },
     ];
+    getAllTodos.mockImplementation(() => {
+      return expectedResponseBody;
+    });
     const response = await request(app)
       .get("/api/todos")
       .set("Accept", "application/json");
