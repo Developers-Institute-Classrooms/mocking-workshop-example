@@ -1,4 +1,4 @@
-# 03 Exercise - SuperTest
+# 03 Exercise - Workshop
 
 Practise writing testing using [SuperTest](https://github.com/visionmedia/supertest).
 
